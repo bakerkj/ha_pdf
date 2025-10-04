@@ -5,8 +5,12 @@ import re
 from PyPDF2 import PdfReader
 import voluptuous as vol
 
-from homeassistant.components.sensor import PLATFORM_SCHEMA
-from homeassistant.const import CONF_NAME, CONF_UNIT_OF_MEASUREMENT, CONF_VALUE_TEMPLATE
+from homeassistant.components.sensor import CONF_STATE_CLASS, PLATFORM_SCHEMA
+from homeassistant.components.sensor import \
+    DEVICE_CLASSES_SCHEMA as SENSOR_DEVICE_CLASSES_SCHEMA
+from homeassistant.components.sensor import \
+    STATE_CLASSES_SCHEMA as SENSOR_STATE_CLASSES_SCHEMA
+from homeassistant.const import CONF_DEVICE_CLASS, CONF_NAME, CONF_UNIT_OF_MEASUREMENT, CONF_VALUE_TEMPLATE
 import homeassistant.helpers.config_validation as cv
 from homeassistant.helpers.entity import Entity
 
@@ -29,6 +33,8 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
         vol.Optional(CONF_NAME, default=DEFAULT_NAME): cv.string,
         vol.Optional(CONF_VALUE_TEMPLATE): cv.template,
         vol.Optional(CONF_UNIT_OF_MEASUREMENT): cv.string,
+        vol.Optional(CONF_DEVICE_CLASS): SENSOR_DEVICE_CLASSES_SCHEMA,
+        vol.Optional(CONF_STATE_CLASS): SENSOR_STATE_CLASSES_SCHEMA,
         vol.Optional(CONF_PDF_PAGE, default=0): cv.string,
         vol.Optional(CONF_REGEX_SEARCH): cv.string,
         vol.Optional(CONF_REGEX_MATCH_INDEX, default=0): cv.string,
@@ -41,6 +47,8 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
     file_path = config.get(CONF_FILE_PATH)
     name = config.get(CONF_NAME)
     unit = config.get(CONF_UNIT_OF_MEASUREMENT)
+    device_class = config.get(CONF_DEVICE_CLASS)
+    state_class = config.get(CONF_STATE_CLASS)
     pdf_page = config.get(CONF_PDF_PAGE)
     value_template = config.get(CONF_VALUE_TEMPLATE)
     regex_search = config.get(CONF_REGEX_SEARCH)
@@ -54,6 +62,8 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
             name,
             file_path,
             unit,
+            device_class,
+            state_class,
             pdf_page,
             value_template,
             regex_search,
@@ -70,6 +80,8 @@ class PDFFileSensor(Entity):
             name,
             file_path,
             unit_of_measurement,
+            device_class,
+            state_class,
             pdf_page,
             value_template,
             regex_search,
@@ -79,6 +91,8 @@ class PDFFileSensor(Entity):
         self._name = name
         self._file_path = file_path
         self._unit_of_measurement = unit_of_measurement
+        self._device_class = device_class
+        self._state_class = state_class
         self._pdf_page = pdf_page
         self._val_tpl = value_template
         self._regex_search = regex_search
@@ -94,6 +108,16 @@ class PDFFileSensor(Entity):
     def unit_of_measurement(self):
         """Return the unit the value is expressed in."""
         return self._unit_of_measurement
+
+    @property
+    def device_class(self):
+        """Return the device class for the sensor."""
+        return self._device_class
+
+    @property
+    def state_class(self):
+        """Return the state class for the sensor."""
+        return self._state_class
 
     @property
     def icon(self):
