@@ -2,7 +2,7 @@
   "domain": "ha_pdf",
   "name": "PDF File",
   "documentation": "https://github.com/bakerkj/ha_pdf/",
-  'issue_tracker": "https://github.com/bakerkj/ha_pdf/issues",
+  "issue_tracker": "https://github.com/bakerkj/ha_pdf/issues",
   "requirements": ["PyPDF2~=3.0.0"],
   "codeowners": [
     "@emcniece",
