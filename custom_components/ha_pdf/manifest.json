@@ -3,7 +3,6 @@
   "name": "PDF File",
   "documentation": "https://github.com/bakerkj/ha_pdf/",
   "issue_tracker": "https://github.com/bakerkj/ha_pdf/issues",
-  "requirements": ["PyPDF2~=3.0.0"],
   "codeowners": [
     "@emcniece",
     "@pineappleemperor",
@@ -14,5 +13,5 @@
   "integration_type": "hub",
   "iot_class": "calculated",
   "requirements": ["pypdf~=4.2.0"],
-  "version": "1.1.3"
+  "version": "1.1.4"
 }

@@ -10,7 +10,10 @@ from homeassistant.components.sensor import \
     DEVICE_CLASSES_SCHEMA as SENSOR_DEVICE_CLASSES_SCHEMA
 from homeassistant.components.sensor import \
     STATE_CLASSES_SCHEMA as SENSOR_STATE_CLASSES_SCHEMA
-from homeassistant.const import CONF_DEVICE_CLASS, CONF_NAME, CONF_UNIT_OF_MEASUREMENT, CONF_VALUE_TEMPLATE
+from homeassistant.const import \
+    CONF_DEVICE_CLASS, CONF_NAME, \
+    CONF_UNIQUE_ID, CONF_UNIT_OF_MEASUREMENT, \
+    CONF_VALUE_TEMPLATE
 import homeassistant.helpers.config_validation as cv
 from homeassistant.helpers.entity import Entity
 
@@ -31,6 +34,7 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
     {
         vol.Required(CONF_FILE_PATH): cv.isfile,
         vol.Optional(CONF_NAME, default=DEFAULT_NAME): cv.string,
+        vol.Optional(CONF_UNIQUE_ID): cv.string,
         vol.Optional(CONF_VALUE_TEMPLATE): cv.template,
         vol.Optional(CONF_UNIT_OF_MEASUREMENT): cv.string,
         vol.Optional(CONF_DEVICE_CLASS): SENSOR_DEVICE_CLASSES_SCHEMA,
@@ -46,6 +50,7 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
     """Set up the file sensor."""
     file_path = config.get(CONF_FILE_PATH)
     name = config.get(CONF_NAME)
+    unique_id = config.get(CONF_UNIQUE_ID)
     unit = config.get(CONF_UNIT_OF_MEASUREMENT)
     device_class = config.get(CONF_DEVICE_CLASS)
     state_class = config.get(CONF_STATE_CLASS)
@@ -60,6 +65,7 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
     if hass.config.is_allowed_path(file_path):
         async_add_entities([PDFFileSensor(
             name,
+            unique_id,
             file_path,
             unit,
             device_class,
@@ -78,6 +84,7 @@ class PDFFileSensor(Entity):
 
     def __init__(self,
             name,
+            unique_id,
             file_path,
             unit_of_measurement,
             device_class,
@@ -89,6 +96,7 @@ class PDFFileSensor(Entity):
     ):
         """Initialize the file sensor."""
         self._name = name
+        self._unique_id = unique_id
         self._file_path = file_path
         self._unit_of_measurement = unit_of_measurement
         self._device_class = device_class
@@ -103,6 +111,11 @@ class PDFFileSensor(Entity):
     def name(self):
         """Return the name of the sensor."""
         return self._name
+
+    @property
+    def unique_id(self):
+        """Return unique id of the sensor."""
+        return self._unique_id
 
     @property
     def unit_of_measurement(self):
