@@ -1,8 +1,17 @@
 {
-  "domain": "pdf",
+  "domain": "ha_pdf",
   "name": "PDF File",
-  "documentation": "https://github.com/bakerkj/ha_pdf",
+  "documentation": "https://github.com/bakerkj/ha_pdf/issues",
   "requirements": ["PyPDF2~=3.0.0"],
-  "codeowners": ["@bakerkj"],
-  "version": "1.1.2"
+  "codeowners": [
+    "@emcniece",
+    "@pineappleemperor",
+    "@bakerkj"
+  ],
+  "dependencies": [],
+  "config_flow": false,
+  "integration_type": "hub",
+  "iot_class": "calculated",
+  "requirements": ["pypdf~=4.2.0"],
+  "version": "1.1.3"
 }
